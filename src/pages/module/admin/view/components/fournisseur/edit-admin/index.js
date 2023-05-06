@@ -8,12 +8,20 @@ import {console} from "next/dist/compiled/@edge-runtime/primitives/console";
 import { Toast } from 'primereact/toast';
 
 import {FournisseurService} from "../../../../../../controller/service/FournisseurService";
-import {Fournisseur} from "../../../../../../controller/model/Fournisseur";
 
 
 
 const Edit = ({visible,onClose,showToast,selectedFournisseur}) => {
-    let emptyFournisseur = new Fournisseur();
+    let emptyFournisseur = {
+
+        nom: '',
+        ice: null,
+        tel: '',
+        email: null,
+        adresse: null,
+        description: '',
+
+    };
 
    const [fournisseur, setFournisseur] = useState( selectedFournisseur || emptyFournisseur);
     const [submitted, setSubmitted] = useState(false);

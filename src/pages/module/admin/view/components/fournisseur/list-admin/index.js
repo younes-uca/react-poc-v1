@@ -12,7 +12,7 @@ import {Dialog} from "primereact/dialog";
 import Create from '../create-admin';
 import Edit from "../edit-admin";
 import {FournisseurService} from "../../../../../../controller/service/FournisseurService";
-import {Fournisseur} from "../../../../../../controller/model/Fournisseur";
+
 
 
 
@@ -21,7 +21,17 @@ import {Fournisseur} from "../../../../../../controller/model/Fournisseur";
 
 
 const Crud = () => {
-    let emptyFournisseur = new Fournisseur();
+    let emptyFournisseur = {
+
+        nom: '',
+        ice: null,
+        tel: '',
+        email: null,
+        adresse: null,
+        description: '',
+
+    };
+
     const [fournisseurs, setFournisseurs] = useState([]);
     const [fournisseurDialog, setFournisseurDialog] = useState(false);
     const [deleteFournisseurDialog, setDeleteFournisseurDialog] = useState(false);
@@ -33,8 +43,6 @@ const Crud = () => {
     const [globalFilter, setGlobalFilter] = useState(null);
     const toast = useRef(null);
     const dt = useRef(null);
-    const router = useRouter();
-
     const [showCreateDialog, setShowCreateDialog] = useState(false);
 
 
@@ -271,7 +279,7 @@ const Crud = () => {
                         <Column header="Action" body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
                     <Create visible={showCreateDialog} onClose={() => setShowCreateDialog(false)} addFournisseur={addFournisseur} showToast={toast.current} />
-                     <Edit  visible={showCreateDialog} onClose={() =>  { setShowCreateDialog(false); setSelectedFournisseur(null); }} showToast={toast.current} selectedFournisseur={selectedFournisseur}/>
+                    <Edit  visible={showCreateDialog} onClose={() =>  { setShowCreateDialog(false); setSelectedFournisseur(null); }} showToast={toast.current} selectedFournisseur={selectedFournisseur}/>
                     <Dialog visible={deleteFournisseurDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteFournisseurDialogFooter} onHide={hideDeleteFournisseurDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />

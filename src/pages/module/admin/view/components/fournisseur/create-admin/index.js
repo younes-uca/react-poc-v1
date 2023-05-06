@@ -10,11 +10,20 @@ import {console} from "next/dist/compiled/@edge-runtime/primitives/console";
 
 import {FournisseurService} from "../../../../../../controller/service/FournisseurService";
 import {Toast} from 'primereact/toast';
-import {Fournisseur} from "../../../../../../controller/model/Fournisseur";
+
 
 
 const Create = ({visible, onClose, addFournisseur, showToast}) => {
-    let emptyFournisseur = new Fournisseur();
+    let emptyFournisseur = {
+
+        nom: '',
+        ice: null,
+        tel: '',
+        email: null,
+        adresse: null,
+        description: '',
+
+    };
 
     const [fournisseur, setFournisseur] = useState(emptyFournisseur);
     const [submitted, setSubmitted] = useState(false);
@@ -43,7 +52,7 @@ const Create = ({visible, onClose, addFournisseur, showToast}) => {
         setFournisseur(_fournisseur);
     };
     const saveFournisseur = async () => {
-        setSubmitted(true);
+
 
         let _fournisseurs = [...fournisseurs];
         let _fournisseur = {...fournisseur};
@@ -140,6 +149,5 @@ const Create = ({visible, onClose, addFournisseur, showToast}) => {
 
 };
 export default Create;
-
 
 

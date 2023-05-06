@@ -1,44 +1,25 @@
-import { Button } from 'primereact/button';
-import { Dialog } from 'primereact/dialog';
-import { InputText } from 'primereact/inputtext';
-import { InputTextarea } from 'primereact/inputtextarea';
-;
-import { classNames } from 'primereact/utils';
-import React, { useEffect, useRef, useState } from 'react';
+import {Button} from 'primereact/button';
+import {Dialog} from 'primereact/dialog';
+import {InputText} from 'primereact/inputtext';
+import {InputTextarea} from 'primereact/inputtextarea';
+
+import {classNames} from 'primereact/utils';
+import React, {useRef, useState} from 'react';
 
 import {console} from "next/dist/compiled/@edge-runtime/primitives/console";
 
 import {FournisseurService} from "../../../../../../controller/service/FournisseurService";
-import { Toast } from 'primereact/toast';
+import {Toast} from 'primereact/toast';
+import {Fournisseur} from "../../../../../../controller/model/Fournisseur";
 
 
-
-
-
-const Create = ({visible,onClose,addFournisseur,showToast}) => {
-    let emptyFournisseur = {
-
-        nom: '',
-        ice: null,
-        tel: '',
-        email: null,
-        adresse: null,
-        description: '',
-
-    };
-
-
-
-
+const Create = ({visible, onClose, addFournisseur, showToast}) => {
+    let emptyFournisseur = new Fournisseur();
 
     const [fournisseur, setFournisseur] = useState(emptyFournisseur);
     const [submitted, setSubmitted] = useState(false);
     const toast = useRef(null);
-     const [fournisseurs, setFournisseurs] = useState([]);
-
-
-
-
+    const [fournisseurs, setFournisseurs] = useState([]);
 
 
     const hideDialog = () => {
@@ -65,7 +46,7 @@ const Create = ({visible,onClose,addFournisseur,showToast}) => {
         setSubmitted(true);
 
         let _fournisseurs = [...fournisseurs];
-        let _fournisseur = { ...fournisseur };
+        let _fournisseur = {...fournisseur};
 
         try {
             if (!_fournisseur.id) {
@@ -107,10 +88,10 @@ const Create = ({visible,onClose,addFournisseur,showToast}) => {
     );
     return (
 
-        <Dialog  visible={visible}  style={{width: "450px"}} header="Fournisseur Details" modal
+        <Dialog visible={visible} style={{width: "450px"}} header="Fournisseur Details" modal
                 className="p-fluid"
                 footer={fournisseurDialogFooter} onHide={hideDialog}>
-            <Toast ref={toast} />
+            <Toast ref={toast}/>
             <div className="formgrid grid">
 
                 <div className="field col">

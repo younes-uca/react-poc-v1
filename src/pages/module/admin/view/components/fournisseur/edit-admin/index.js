@@ -10,26 +10,14 @@ import {console} from "next/dist/compiled/@edge-runtime/primitives/console";
 
 import {FournisseurService} from "../../../../../../controller/service/FournisseurService";
 import { Toast } from 'primereact/toast';
+import {Fournisseur} from "../../../../../../controller/model/Fournisseur";
 
 
 
 
 
 const Edit = ({visible,onClose,showToast,selectedFournisseur}) => {
-    let emptyFournisseur = {
-
-        nom: '',
-        ice: null,
-        tel: '',
-        email: null,
-        adresse: null,
-        description: '',
-
-    };
-
-
-
-
+    let emptyFournisseur = new Fournisseur();
 
    const [fournisseur, setFournisseur] = useState( selectedFournisseur || emptyFournisseur);
     const [submitted, setSubmitted] = useState(false);
@@ -39,10 +27,6 @@ const Edit = ({visible,onClose,showToast,selectedFournisseur}) => {
     useEffect(() => {
         setFournisseur(selectedFournisseur || emptyFournisseur);
     }, [selectedFournisseur]);
-
-
-
-
 
 
     const hideDialog = () => {

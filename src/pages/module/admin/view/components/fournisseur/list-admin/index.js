@@ -12,6 +12,7 @@ import {Dialog} from "primereact/dialog";
 import Create from '../create-admin';
 import Edit from "../edit-admin";
 import {FournisseurService} from "../../../../../../controller/service/FournisseurService";
+import {Fournisseur} from "../../../../../../controller/model/Fournisseur";
 
 
 
@@ -20,16 +21,7 @@ import {FournisseurService} from "../../../../../../controller/service/Fournisse
 
 
 const Crud = () => {
-    let emptyFournisseur = {
-
-        nom: '',
-        ice: null,
-        tel: '',
-        email: null,
-        adresse: null,
-        description: '',
-
-    };
+    let emptyFournisseur = new Fournisseur();
     const [fournisseurs, setFournisseurs] = useState([]);
     const [fournisseurDialog, setFournisseurDialog] = useState(false);
     const [deleteFournisseurDialog, setDeleteFournisseurDialog] = useState(false);

@@ -7,57 +7,45 @@ import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
 import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Dialog } from 'primereact/dialog';
+import {console} from "next/dist/compiled/@edge-runtime/primitives/console";
+import {Dialog} from "primereact/dialog";
 import Create from '../create-admin';
-import Edit from '../edit-admin';
-import { FournisseurService } from '../../../../../../controller/service/FournisseurService';
+import Edit from "../edit-admin";
+import {FournisseurService} from "../../../../../../controller/service/FournisseurService";
+import {Fournisseur} from "../../../../../../controller/model/Fournisseur";
 
-interface Fournisseur {
-    id?: number;
-    nom: string;
-    ice: number | null;
-    tel: string;
-    email: string | null;
-    adresse: string | null;
-    description: string;
-}
 
-const emptyFournisseur: Fournisseur = {
-    nom: '',
-    ice: null,
-    tel: '',
-    email: null,
-    adresse: null,
-    description: '',
-};
+
+
+
+
 
 const Crud = () => {
-    const [fournisseurs, setFournisseurs] = useState<Fournisseur[]>([]);
-    const [fournisseurDialog, setFournisseurDialog] = useState<boolean>(false);
-    const [deleteFournisseurDialog, setDeleteFournisseurDialog] = useState<boolean>(false);
-    const [deleteFournisseursDialog, setDeleteFournisseursDialog] = useState<boolean>(false);
-    const [fournisseur, setFournisseur] = useState<Fournisseur>(emptyFournisseur);
-    const [selectedFournisseurs, setSelectedFournisseurs] = useState<Fournisseur[] | null>(null);
-    const [selectedFournisseur, setSelectedFournisseur] = useState<Fournisseur | null>(null);
-    const [submitted, setSubmitted] = useState<boolean>(false);
-    const [globalFilter, setGlobalFilter] = useState<string | null>(null);
-    const toast = useRef<Toast>(null);
-    const dt = useRef<DataTable>(null);
+    let emptyFournisseur = new Fournisseur();
+    const [fournisseurs, setFournisseurs] = useState([]);
+    const [fournisseurDialog, setFournisseurDialog] = useState(false);
+    const [deleteFournisseurDialog, setDeleteFournisseurDialog] = useState(false);
+    const [deleteFournisseursDialog, setDeleteFournisseursDialog] = useState(false);
+    const [fournisseur, setFournisseur] = useState(emptyFournisseur);
+    const [selectedFournisseurs, setSelectedFournisseurs] = useState(null);
+    const [selectedFournisseur, setSelectedFournisseur] = useState(null);
+    const [submitted, setSubmitted] = useState(false);
+    const [globalFilter, setGlobalFilter] = useState(null);
+    const toast = useRef(null);
+    const dt = useRef(null);
     const router = useRouter();
 
-    const [showCreateDialog, setShowCreateDialog] = useState<boolean>(false);
+    const [showCreateDialog, setShowCreateDialog] = useState(false);
 
 
-    useEffect(() => {
-        const fetchFournisseurs = async () => {
-            try {
-                const response = await FournisseurService.getFournisseurList();
-                setFournisseurs(response.data);
-            } catch (error) {
+
+    useEffect(async () => {
+        await FournisseurService.getFournisseurList().then(response => {
+            setFournisseurs(response.data);
+        })
+            .catch(error => {
                 console.error(error);
-            }
-        };
-        fetchFournisseurs();
+            });
     }, []);
 
 

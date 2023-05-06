@@ -2,34 +2,18 @@ import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { InputTextarea } from 'primereact/inputtextarea';
-;
 import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
-
 import {console} from "next/dist/compiled/@edge-runtime/primitives/console";
-
-import {FournisseurService} from "../../../../../../controller/service/FournisseurService";
 import { Toast } from 'primereact/toast';
 
-
+import {FournisseurService} from "../../../../../../controller/service/FournisseurService";
+import {Fournisseur} from "../../../../../../controller/model/Fournisseur";
 
 
 
 const Edit = ({visible,onClose,showToast,selectedFournisseur}) => {
-    let emptyFournisseur = {
-
-        nom: '',
-        ice: null,
-        tel: '',
-        email: null,
-        adresse: null,
-        description: '',
-
-    };
-
-
-
-
+    let emptyFournisseur = new Fournisseur();
 
    const [fournisseur, setFournisseur] = useState( selectedFournisseur || emptyFournisseur);
     const [submitted, setSubmitted] = useState(false);
@@ -39,10 +23,6 @@ const Edit = ({visible,onClose,showToast,selectedFournisseur}) => {
     useEffect(() => {
         setFournisseur(selectedFournisseur || emptyFournisseur);
     }, [selectedFournisseur]);
-
-
-
-
 
 
     const hideDialog = () => {
@@ -66,15 +46,7 @@ const Edit = ({visible,onClose,showToast,selectedFournisseur}) => {
         setFournisseur(_fournisseur);
     };
     const findIndexById = (id) => {
-        let index = -1;
-        for (let i = 0; i < fournisseurs.length; i++) {
-            if (fournisseurs[i].id === id) {
-                index = i;
-                break;
-            }
-        }
-
-        return index;
+        return fournisseurs.findIndex(e=>e.id == id);
     };
     const saveFournisseur = async () => {
         setSubmitted(true);
@@ -84,7 +56,6 @@ const Edit = ({visible,onClose,showToast,selectedFournisseur}) => {
 
         try {
             if (_fournisseur.id) {
-
                 FournisseurService.putFournisseur(_fournisseur);
                 const index = findIndexById(_fournisseur.id);
                 _fournisseurs[index] = _fournisseur;
@@ -102,10 +73,7 @@ const Edit = ({visible,onClose,showToast,selectedFournisseur}) => {
             console.log(error);
 
             showToast.show({
-                severity: 'error',
-                summary: 'Error',
-                detail: 'Failed to save fournisseur',
-                life: 3000,
+                severity: 'error',summary: 'Error',detail: 'Failed to save fournisseur', life: 3000,
             });
         }
     };

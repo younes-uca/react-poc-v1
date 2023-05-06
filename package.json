@@ -9,6 +9,8 @@
         "lint": "next lint"
     },
     "dependencies": {
+        "@types/jest": "^29.5.1",
+        "@types/react-dom": "^18.2.4",
         "axios": "^1.4.0",
         "chart.js": "4.2.1",
         "eslint": "8.38.0",
@@ -18,9 +20,12 @@
         "primeicons": "^6.0.1",
         "primereact": "9.2.3",
         "react": "18.2.0",
-        "react-dom": "18.2.0"
+        "react-dom": "18.2.0",
+        "typescript": "^5.0.4"
     },
     "devDependencies": {
+        "@types/node": "^20.1.0",
+        "@types/react": "^18.2.6",
         "sass": "^1.58.3"
     }
 }

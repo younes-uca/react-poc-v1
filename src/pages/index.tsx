@@ -9,7 +9,7 @@ import { InputText } from 'primereact/inputtext';
 import { classNames } from 'primereact/utils';
 import axios from 'axios';
 
-const LoginPage = () => {
+const LoginPage  = () => {
     const [password, setPassword] = useState('');
     const [checked, setChecked] = useState(false);
     const { layoutConfig } = useContext(LayoutContext);

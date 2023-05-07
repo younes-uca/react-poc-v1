@@ -9,9 +9,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import {console} from "next/dist/compiled/@edge-runtime/primitives/console";
 import {Dialog} from "primereact/dialog";
-import Create from '../create-admin';
-import Edit from "../edit-admin";
-import {FournisseurService} from "../../../../../../controller/service/FournisseurService";
+import Create from '/src/pages/module/admin/view/components/fournisseur/create-admin';
+import Edit from '/src/pages/module/admin/view/components/fournisseur/edit-admin';
+import {FournisseurService} from '/src/pages/controller/service/FournisseurService';
 
 
 
@@ -24,25 +24,24 @@ const Crud = () => {
     let emptyFournisseur = {
 
         nom: '',
-        ice: null,
-        tel: '',
-        email: null,
-        adresse: null,
+        ice: '',
+        tel : '',
+        email : '',
+        adresse: '',
         description: '',
 
-    };
-
+};
     const [fournisseurs, setFournisseurs] = useState([]);
-    const [fournisseurDialog, setFournisseurDialog] = useState(false);
-    const [deleteFournisseurDialog, setDeleteFournisseurDialog] = useState(false);
+    const [deleteItemDialog, setDeleteItemDialog] = useState(false);
     const [deleteFournisseursDialog, setDeleteFournisseursDialog] = useState(false);
     const [fournisseur, setFournisseur] = useState(emptyFournisseur);
-    const [selectedFournisseurs, setSelectedFournisseurs] = useState(null);
-    const [selectedFournisseur, setSelectedFournisseur] = useState(null);
-    const [submitted, setSubmitted] = useState(false);
+    const [selectedItems, setSelectedItems] = useState(null);
+    const [selectedItem, setSelectedItem] = useState(null);
     const [globalFilter, setGlobalFilter] = useState(null);
     const toast = useRef(null);
     const dt = useRef(null);
+    const router = useRouter();
+
     const [showCreateDialog, setShowCreateDialog] = useState(false);
 
 
@@ -61,14 +60,12 @@ const Crud = () => {
         setShowCreateDialog(true);
     };
     const showEditModal = (fournisseur)  => {
-        setSelectedFournisseur(fournisseur);
-
-
+        setSelectedItem(fournisseur);
         setShowCreateDialog(true);
 
     }
 
-    const addFournisseur = (fournisseur) => {
+    const add = (fournisseur) => {
         setFournisseurs([...fournisseurs, fournisseur]);
     };
 
@@ -76,10 +73,10 @@ const Crud = () => {
     const deleteFournisseur =  async () => {
 
         try {
-            await FournisseurService.deleteFournisseur(selectedFournisseur.id);
-            setDeleteFournisseurDialog(false);
+            await FournisseurService.deleteFournisseur(selectedItem.id);
+            setDeleteItemDialog(false);
             setFournisseur(emptyFournisseur);
-            let _fournisseurs = fournisseurs.filter((val) => val.id !== selectedFournisseur.id);
+            let _fournisseurs = fournisseurs.filter((val) => val.id !== selectedItem.id);
             setFournisseurs(_fournisseurs);
             toast.current.show({severity: 'success', summary: 'Successful', detail: 'Fournisseur Deleted', life: 3000});
 
@@ -88,16 +85,16 @@ const Crud = () => {
         }
     };
 
-    const hideDeleteFournisseurDialog = () => {
-        setDeleteFournisseurDialog(false);
+    const hideDeleteItemDialog = () => {
+        setDeleteItemDialog(false);
     };
 
     const hideDeleteFournisseursDialog = () => {
         setDeleteFournisseursDialog(false);
     };
     const confirmDeleteFournisseur = (fournisseur) => {
-        setSelectedFournisseur(fournisseur);
-        setDeleteFournisseurDialog(true);
+        setSelectedItem(fournisseur);
+        setDeleteItemDialog(true);
     };
     const confirmDeleteSelected = () => {
         setDeleteFournisseursDialog(true);
@@ -107,12 +104,12 @@ const Crud = () => {
     };
 
 
-    const deleteSelectedFournisseurs = async () => {
-        await FournisseurService.deleteAll(selectedFournisseurs);
-        let _fournisseurs = fournisseurs.filter((val) => !selectedFournisseurs.includes(val));
+    const deleteSelectedItems = async () => {
+        await FournisseurService.deleteAll(selectedItems);
+        let _fournisseurs = fournisseurs.filter((val) => !selectedItems.includes(val));
         setFournisseurs(_fournisseurs);
         setDeleteFournisseursDialog(false);
-        setSelectedFournisseurs(null);
+        setSelectedItems(null);
         toast.current.show({severity: 'success', summary: 'Successful', detail: 'Fournisseurs Deleted', life: 3000});
     };
 
@@ -132,7 +129,7 @@ const Crud = () => {
             <React.Fragment>
                 <div className="my-2">
                     <Button label="New" icon="pi pi-plus" severity="sucess" className="mr-2" onClick={showCreateModal} />
-                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedFournisseurs || !selectedFournisseurs.length} />
+                    <Button label="Delete" icon="pi pi-trash" severity="danger" onClick={confirmDeleteSelected} disabled={!selectedItems || !selectedItems.length} />
                 </div>
             </React.Fragment>
         );
@@ -231,16 +228,16 @@ const Crud = () => {
         </div>
     );
 
-    const deleteFournisseurDialogFooter = (
+    const deleteItemDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteFournisseurDialog} />
+            <Button label="No" icon="pi pi-times" text onClick={hideDeleteItemDialog} />
             <Button label="Yes" icon="pi pi-check" text onClick={deleteFournisseur} />
         </>
     );
     const deleteFournisseursDialogFooter = (
         <>
             <Button label="No" icon="pi pi-times" text onClick={hideDeleteFournisseursDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteSelectedFournisseurs} />
+            <Button label="Yes" icon="pi pi-check" text onClick={deleteSelectedItems} />
         </>
     );
     return (
@@ -253,8 +250,8 @@ const Crud = () => {
                     <DataTable
                         ref={dt}
                         value={fournisseurs}
-                        selection={selectedFournisseurs}
-                        onSelectionChange={(e) => setSelectedFournisseurs(e.value)}
+                        selection={selectedItems}
+                        onSelectionChange={(e) => setSelectedItems(e.value)}
                         dataKey="id"
                         paginator
                         rows={10}
@@ -278,9 +275,9 @@ const Crud = () => {
                         <Column field="description" header="Description" sortable body={descriptionBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column header="Action" body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
-                    <Create visible={showCreateDialog} onClose={() => setShowCreateDialog(false)} addFournisseur={addFournisseur} showToast={toast.current} />
-                    <Edit  visible={showCreateDialog} onClose={() =>  { setShowCreateDialog(false); setSelectedFournisseur(null); }} showToast={toast.current} selectedFournisseur={selectedFournisseur}/>
-                    <Dialog visible={deleteFournisseurDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteFournisseurDialogFooter} onHide={hideDeleteFournisseurDialog}>
+                    <Create visible={showCreateDialog} onClose={() => setShowCreateDialog(false)} add={add} showToast={toast.current} />
+                     <Edit  visible={showCreateDialog} onClose={() =>  { setShowCreateDialog(false); setSelectedItem(null); }} showToast={toast.current} selectedItem={selectedItem}/>
+                    <Dialog visible={deleteItemDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteItemDialogFooter} onHide={hideDeleteItemDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {fournisseur && (

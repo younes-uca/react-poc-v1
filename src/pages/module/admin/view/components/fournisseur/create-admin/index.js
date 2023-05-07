@@ -2,18 +2,15 @@ import {Button} from 'primereact/button';
 import {Dialog} from 'primereact/dialog';
 import {InputText} from 'primereact/inputtext';
 import {InputTextarea} from 'primereact/inputtextarea';
-
 import {classNames} from 'primereact/utils';
 import React, {useRef, useState} from 'react';
-
 import {console} from "next/dist/compiled/@edge-runtime/primitives/console";
-
-import {FournisseurService} from "../../../../../../controller/service/FournisseurService";
 import {Toast} from 'primereact/toast';
+import {FournisseurService} from "/src/pages/controller/service/FournisseurService";
 
 
 
-const Create = ({visible, onClose, addFournisseur, showToast}) => {
+const Create = ({visible, onClose, add, showToast}) => {
     let emptyFournisseur = {
 
         nom: '',
@@ -27,8 +24,8 @@ const Create = ({visible, onClose, addFournisseur, showToast}) => {
 
     const [fournisseur, setFournisseur] = useState(emptyFournisseur);
     const [submitted, setSubmitted] = useState(false);
-    const toast = useRef(null);
     const [fournisseurs, setFournisseurs] = useState([]);
+    const toast = useRef(null);
 
 
     const hideDialog = () => {
@@ -51,8 +48,8 @@ const Create = ({visible, onClose, addFournisseur, showToast}) => {
 
         setFournisseur(_fournisseur);
     };
-    const saveFournisseur = async () => {
-
+    const saveItem = async () => {
+        setSubmitted(false);
 
         let _fournisseurs = [...fournisseurs];
         let _fournisseur = {...fournisseur};
@@ -61,9 +58,8 @@ const Create = ({visible, onClose, addFournisseur, showToast}) => {
             if (!_fournisseur.id) {
                 await FournisseurService.saveFournisseur(_fournisseur);
                 _fournisseur.id = createId();
-
-                addFournisseur(_fournisseur);
-
+       _fournisseurs.push(_fournisseur)
+                add(_fournisseur);
 
                 showToast.show({
                     severity: 'success',
@@ -89,18 +85,18 @@ const Create = ({visible, onClose, addFournisseur, showToast}) => {
     };
 
 
-    const fournisseurDialogFooter = (
+    const itemDialogFooter = (
         <>
             <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog}/>
-            <Button label="Save" icon="pi pi-check" text onClick={saveFournisseur}/>
+            <Button label="Save" icon="pi pi-check" text onClick={saveItem}/>
         </>
     );
     return (
 
         <Dialog visible={visible} style={{width: "450px"}} header="Fournisseur Details" modal
                 className="p-fluid"
-                footer={fournisseurDialogFooter} onHide={hideDialog}>
-            <Toast ref={toast}/>
+                footer={itemDialogFooter} onHide={hideDialog}>
+            <Toast ref={toast} />
             <div className="formgrid grid">
 
                 <div className="field col">

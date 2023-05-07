@@ -36,6 +36,7 @@ const Crud = () => {
     const dt = useRef(null);
     const router = useRouter();
     const [showCreateDialog, setShowCreateDialog] = useState(false);
+    const [showEditDialog, setShowEditDialog] = useState(false);
 
 
 
@@ -54,12 +55,12 @@ const Crud = () => {
     };
     const showEditModal = (fournisseur)  => {
         setSelectedItem(fournisseur);
-        setShowCreateDialog(true);
+        setShowEditDialog(true);
 
     }
 
-    const add = (fournisseur) => {
-        setFournisseurs([...fournisseurs, fournisseur]);
+    const add = (item) => {
+        setFournisseurs([...fournisseurs, item]);
     };
     const update = (updatedItem) => {
         const updatedList = fournisseurs.map((fournisseur) => {
@@ -94,8 +95,8 @@ const Crud = () => {
     const hideDeleteItemsDialog = () => {
         setDeleteItemsDialog(false);
     };
-    const confirmDeleteItem = (fournisseur) => {
-        setSelectedItem(fournisseur);
+    const confirmDeleteItem = (item) => {
+        setSelectedItem(item);
         setDeleteItemDialog(true);
     };
     const confirmDeleteSelected = () => {
@@ -278,7 +279,7 @@ const Crud = () => {
                         <Column header="Action" body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
                     <Create visible={showCreateDialog} onClose={() => setShowCreateDialog(false)} add={add} showToast={toast.current} items={fournisseurs} />
-                     <Edit  visible={showCreateDialog} onClose={() =>  { setShowCreateDialog(false); setSelectedItem(null); }} showToast={toast.current} selectedItem={selectedItem} update={update}/>
+                     <Edit  visible={showEditDialog} onClose={() =>  { setShowEditDialog(false); setSelectedItem(null); }} showToast={toast.current} selectedItem={selectedItem} update={update}/>
                     <Dialog visible={deleteItemDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteItemDialogFooter} onHide={hideDeleteItemDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />

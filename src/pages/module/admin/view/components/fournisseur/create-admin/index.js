@@ -86,7 +86,7 @@ const Create = ({visible,onClose,add,showToast,items}) => {
     const itemDialogFooter = (
         <>
             <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog}/>
-            <Button label="Save" icon="pi pi-check" text onClick={saveItem}/>
+            <Button label="Save" icon="pi pi-check" text onClick={() => saveItem()}/>
         </>
     );
     return (

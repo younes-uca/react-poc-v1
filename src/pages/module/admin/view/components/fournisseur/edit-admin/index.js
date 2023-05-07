@@ -35,9 +35,7 @@ const Edit = ({visible, onClose, showToast, selectedItem,update}) => {
 
         setFournisseur(_item);
     };
-    const findIndexById = (id) => {
-        return fournisseurs.findIndex(e => e.id == id);
-    };
+
     const saveItem = async () => {
         setSubmitted(true);
 

@@ -10,7 +10,7 @@ import {FournisseurService} from '/src/pages/controller/service/FournisseurServi
 import Fournisseur from '/src/pages/controller/model/fournisseur';
 
 
-const Edit = ({visible, onClose, showToast, selectedItem}) => {
+const Edit = ({visible, onClose, showToast, selectedItem,update}) => {
     const emptyFournisseur = new Fournisseur();
 
     const [fournisseur, setFournisseur] = useState(selectedItem || emptyFournisseur);
@@ -41,14 +41,17 @@ const Edit = ({visible, onClose, showToast, selectedItem}) => {
     const saveItem = async () => {
         setSubmitted(true);
 
-        let _items = [...fournisseurs];
         let _item = {...fournisseur};
 
         try {
             if (_item.id) {
-                FournisseurService.putFournisseur(_item);
-                const index = findIndexById(_item.id);
-                _items[index] = _item;
+                FournisseurService.putFournisseur(_item).then((response) => {
+                    update(response.data);
+                    onClose();
+
+                })
+
+
                 showToast.show({
                     severity: 'success',
                     summary: 'Successful',
@@ -56,9 +59,8 @@ const Edit = ({visible, onClose, showToast, selectedItem}) => {
                     life: 3000
                 });
             }
-            setFournisseurs(_items);
-            onClose();
-            setFournisseur(emptyFournisseur);
+
+
         } catch (error) {
             console.log(error);
 

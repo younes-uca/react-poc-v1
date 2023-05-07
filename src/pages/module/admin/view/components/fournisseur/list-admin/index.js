@@ -61,6 +61,15 @@ const Crud = () => {
     const add = (fournisseur) => {
         setFournisseurs([...fournisseurs, fournisseur]);
     };
+    const update = (updatedItem) => {
+        const updatedList = fournisseurs.map((fournisseur) => {
+            if (fournisseur.id === updatedItem.id) {
+                return updatedItem;
+            }
+            return fournisseur;
+        });
+        setFournisseurs(updatedList);
+    };
 
 
     const deleteItem =  async () => {
@@ -268,8 +277,8 @@ const Crud = () => {
                         <Column field="description" header="Description" sortable body={descriptionBodyTemplate} headerStyle={{ minWidth: '15rem' }}></Column>
                         <Column header="Action" body={actionBodyTemplate} headerStyle={{ minWidth: '10rem' }}></Column>
                     </DataTable>
-                    <Create visible={showCreateDialog} onClose={() => setShowCreateDialog(false)} add={add} showToast={toast.current} />
-                     <Edit  visible={showCreateDialog} onClose={() =>  { setShowCreateDialog(false); setSelectedItem(null); }} showToast={toast.current} selectedItem={selectedItem}/>
+                    <Create visible={showCreateDialog} onClose={() => setShowCreateDialog(false)} add={add} showToast={toast.current} items={fournisseurs} />
+                     <Edit  visible={showCreateDialog} onClose={() =>  { setShowCreateDialog(false); setSelectedItem(null); }} showToast={toast.current} selectedItem={selectedItem} update={update}/>
                     <Dialog visible={deleteItemDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteItemDialogFooter} onHide={hideDeleteItemDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />

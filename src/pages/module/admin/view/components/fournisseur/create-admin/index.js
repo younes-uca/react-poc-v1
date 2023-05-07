@@ -12,7 +12,7 @@ import Fournisseur from '/src/pages/controller/model/fournisseur';
 
 
 
-const Create = ({visible,onClose,add,showToast}) => {
+const Create = ({visible,onClose,add,showToast,items}) => {
     const emptyFournisseur = new Fournisseur();
 
 
@@ -21,7 +21,7 @@ const Create = ({visible,onClose,add,showToast}) => {
     const [fournisseur, setFournisseur] = useState(emptyFournisseur);
     const [submitted, setSubmitted] = useState(false);
     const toast = useRef(null);
-    const [fournisseurs, setFournisseurs] = useState([]);
+    const [fournisseurs, setFournisseurs] = useState([items]);
 
 
 
@@ -47,6 +47,7 @@ const Create = ({visible,onClose,add,showToast}) => {
         setFournisseur(_item);
     };
     const saveItem = async () => {
+
         setSubmitted(true);
 
         let _items = [...fournisseurs];

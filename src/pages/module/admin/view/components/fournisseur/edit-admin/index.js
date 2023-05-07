@@ -4,22 +4,14 @@ import {InputText} from 'primereact/inputtext';
 import {InputTextarea} from 'primereact/inputtextarea';
 import {classNames} from 'primereact/utils';
 import React, {useEffect, useRef, useState} from 'react';
-import {console} from "next/dist/compiled/@edge-runtime/primitives/console";
+import {console} from 'next/dist/compiled/@edge-runtime/primitives/console';
 import {Toast} from 'primereact/toast';
 import {FournisseurService} from '/src/pages/controller/service/FournisseurService';
+import Fournisseur from '/src/pages/controller/model/fournisseur';
 
 
 const Edit = ({visible, onClose, showToast, selectedItem}) => {
-    let emptyFournisseur = {
-
-        nom: '',
-        ice: null,
-        tel: '',
-        email: null,
-        adresse: null,
-        description: '',
-
-    };
+    const emptyFournisseur = new Fournisseur();
 
     const [fournisseur, setFournisseur] = useState(selectedItem || emptyFournisseur);
     const [submitted, setSubmitted] = useState(false);
@@ -38,10 +30,10 @@ const Edit = ({visible, onClose, showToast, selectedItem}) => {
 
     const onInputChange = (e, nom) => {
         const val = (e.target && e.target.value) || '';
-        let _fournisseur = {...selectedItem};
-        _fournisseur[`${nom}`] = val;
+        let _item = {...selectedItem};
+        _item[`${nom}`] = val;
 
-        setFournisseur(_fournisseur);
+        setFournisseur(_item);
     };
     const findIndexById = (id) => {
         return fournisseurs.findIndex(e => e.id == id);
@@ -49,14 +41,14 @@ const Edit = ({visible, onClose, showToast, selectedItem}) => {
     const saveItem = async () => {
         setSubmitted(true);
 
-        let _fournisseurs = [...fournisseurs];
-        let _fournisseur = {...fournisseur};
+        let _items = [...fournisseurs];
+        let _item = {...fournisseur};
 
         try {
-            if (_fournisseur.id) {
-                FournisseurService.putFournisseur(_fournisseur);
-                const index = findIndexById(_fournisseur.id);
-                _fournisseurs[index] = _fournisseur;
+            if (_item.id) {
+                FournisseurService.putFournisseur(_item);
+                const index = findIndexById(_item.id);
+                _items[index] = _item;
                 showToast.show({
                     severity: 'success',
                     summary: 'Successful',
@@ -64,7 +56,7 @@ const Edit = ({visible, onClose, showToast, selectedItem}) => {
                     life: 3000
                 });
             }
-            setFournisseurs(_fournisseurs);
+            setFournisseurs(_items);
             onClose();
             setFournisseur(emptyFournisseur);
         } catch (error) {

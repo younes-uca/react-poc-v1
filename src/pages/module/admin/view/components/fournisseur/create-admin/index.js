@@ -1,31 +1,29 @@
-import {Button} from 'primereact/button';
-import {Dialog} from 'primereact/dialog';
-import {InputText} from 'primereact/inputtext';
-import {InputTextarea} from 'primereact/inputtextarea';
-import {classNames} from 'primereact/utils';
-import React, {useRef, useState} from 'react';
-import {console} from "next/dist/compiled/@edge-runtime/primitives/console";
-import {Toast} from 'primereact/toast';
-import {FournisseurService} from "/src/pages/controller/service/FournisseurService";
+import { Button } from 'primereact/button';
+import { Dialog } from 'primereact/dialog';
+import { InputText } from 'primereact/inputtext';
+import { InputTextarea } from 'primereact/inputtextarea';
+;
+import { classNames } from 'primereact/utils';
+import React, { useRef, useState } from 'react';
+import {console} from 'next/dist/compiled/@edge-runtime/primitives/console';
+import { Toast } from 'primereact/toast';
+import {FournisseurService} from '/src/pages/controller/service/FournisseurService';
+import Fournisseur from '/src/pages/controller/model/fournisseur';
 
 
 
-const Create = ({visible, onClose, add, showToast}) => {
-    let emptyFournisseur = {
+const Create = ({visible,onClose,add,showToast}) => {
+    const emptyFournisseur = new Fournisseur();
 
-        nom: '',
-        ice: null,
-        tel: '',
-        email: null,
-        adresse: null,
-        description: '',
 
-    };
+
 
     const [fournisseur, setFournisseur] = useState(emptyFournisseur);
     const [submitted, setSubmitted] = useState(false);
-    const [fournisseurs, setFournisseurs] = useState([]);
     const toast = useRef(null);
+    const [fournisseurs, setFournisseurs] = useState([]);
+
+
 
 
     const hideDialog = () => {
@@ -43,23 +41,24 @@ const Create = ({visible, onClose, add, showToast}) => {
     };
     const onInputChange = (e, nom) => {
         const val = (e.target && e.target.value) || '';
-        let _fournisseur = {...fournisseur};
-        _fournisseur[`${nom}`] = val;
+        let _item = {...fournisseur};
+        _item[`${nom}`] = val;
 
-        setFournisseur(_fournisseur);
+        setFournisseur(_item);
     };
     const saveItem = async () => {
-        setSubmitted(false);
+        setSubmitted(true);
 
-        let _fournisseurs = [...fournisseurs];
-        let _fournisseur = {...fournisseur};
+        let _items = [...fournisseurs];
+        let _item = { ...fournisseur };
 
         try {
-            if (!_fournisseur.id) {
-                await FournisseurService.saveFournisseur(_fournisseur);
-                _fournisseur.id = createId();
-       _fournisseurs.push(_fournisseur)
-                add(_fournisseur);
+            if (!_item.id) {
+                await FournisseurService.saveFournisseur(_item);
+                _item.id = createId();
+
+                _items.push(_item);
+                add(_item);
 
                 showToast.show({
                     severity: 'success',
@@ -69,7 +68,7 @@ const Create = ({visible, onClose, add, showToast}) => {
                 });
             }
 
-            setFournisseurs(_fournisseurs);
+            setFournisseurs(_items);
             onClose();
             setFournisseur(emptyFournisseur);
         } catch (error) {
@@ -83,8 +82,6 @@ const Create = ({visible, onClose, add, showToast}) => {
             });
         }
     };
-
-
     const itemDialogFooter = (
         <>
             <Button label="Cancel" icon="pi pi-times" text onClick={hideDialog}/>
@@ -93,9 +90,9 @@ const Create = ({visible, onClose, add, showToast}) => {
     );
     return (
 
-        <Dialog visible={visible} style={{width: "450px"}} header="Fournisseur Details" modal
-                className="p-fluid"
-                footer={itemDialogFooter} onHide={hideDialog}>
+        <Dialog  visible={visible}  style={{width: "450px"}} header="Fournisseur Details" modal
+                 className="p-fluid"
+                 footer={itemDialogFooter} onHide={hideDialog}>
             <Toast ref={toast} />
             <div className="formgrid grid">
 
@@ -145,5 +142,6 @@ const Create = ({visible, onClose, add, showToast}) => {
 
 };
 export default Create;
+
 
 

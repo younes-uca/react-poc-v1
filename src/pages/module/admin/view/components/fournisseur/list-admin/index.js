@@ -7,11 +7,12 @@ import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
 import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
-import {console} from "next/dist/compiled/@edge-runtime/primitives/console";
-import {Dialog} from "primereact/dialog";
+import {console} from 'next/dist/compiled/@edge-runtime/primitives/console';
+import {Dialog} from 'primereact/dialog';
 import Create from '/src/pages/module/admin/view/components/fournisseur/create-admin';
 import Edit from '/src/pages/module/admin/view/components/fournisseur/edit-admin';
 import {FournisseurService} from '/src/pages/controller/service/FournisseurService';
+import Fournisseur from '/src/pages/controller/model/fournisseur';
 
 
 
@@ -21,19 +22,12 @@ import {FournisseurService} from '/src/pages/controller/service/FournisseurServi
 
 
 const Crud = () => {
-    let emptyFournisseur = {
+    const emptyFournisseur = new Fournisseur();
 
-        nom: '',
-        ice: '',
-        tel : '',
-        email : '',
-        adresse: '',
-        description: '',
 
-};
     const [fournisseurs, setFournisseurs] = useState([]);
     const [deleteItemDialog, setDeleteItemDialog] = useState(false);
-    const [deleteFournisseursDialog, setDeleteFournisseursDialog] = useState(false);
+    const [deleteItemsDialog, setDeleteItemsDialog] = useState(false);
     const [fournisseur, setFournisseur] = useState(emptyFournisseur);
     const [selectedItems, setSelectedItems] = useState(null);
     const [selectedItem, setSelectedItem] = useState(null);
@@ -41,7 +35,6 @@ const Crud = () => {
     const toast = useRef(null);
     const dt = useRef(null);
     const router = useRouter();
-
     const [showCreateDialog, setShowCreateDialog] = useState(false);
 
 
@@ -70,14 +63,14 @@ const Crud = () => {
     };
 
 
-    const deleteFournisseur =  async () => {
+    const deleteItem =  async () => {
 
         try {
             await FournisseurService.deleteFournisseur(selectedItem.id);
             setDeleteItemDialog(false);
             setFournisseur(emptyFournisseur);
-            let _fournisseurs = fournisseurs.filter((val) => val.id !== selectedItem.id);
-            setFournisseurs(_fournisseurs);
+            let _items = fournisseurs.filter((val) => val.id !== selectedItem.id);
+            setFournisseurs(_items);
             toast.current.show({severity: 'success', summary: 'Successful', detail: 'Fournisseur Deleted', life: 3000});
 
         } catch (error) {
@@ -89,15 +82,15 @@ const Crud = () => {
         setDeleteItemDialog(false);
     };
 
-    const hideDeleteFournisseursDialog = () => {
-        setDeleteFournisseursDialog(false);
+    const hideDeleteItemsDialog = () => {
+        setDeleteItemsDialog(false);
     };
-    const confirmDeleteFournisseur = (fournisseur) => {
+    const confirmDeleteItem = (fournisseur) => {
         setSelectedItem(fournisseur);
         setDeleteItemDialog(true);
     };
     const confirmDeleteSelected = () => {
-        setDeleteFournisseursDialog(true);
+        setDeleteItemsDialog(true);
     };
     const exportCSV = () => {
         dt.current.exportCSV();
@@ -106,9 +99,9 @@ const Crud = () => {
 
     const deleteSelectedItems = async () => {
         await FournisseurService.deleteAll(selectedItems);
-        let _fournisseurs = fournisseurs.filter((val) => !selectedItems.includes(val));
-        setFournisseurs(_fournisseurs);
-        setDeleteFournisseursDialog(false);
+        let _items = fournisseurs.filter((val) => !selectedItems.includes(val));
+        setFournisseurs(_items);
+        setDeleteItemsDialog(false);
         setSelectedItems(null);
         toast.current.show({severity: 'success', summary: 'Successful', detail: 'Fournisseurs Deleted', life: 3000});
     };
@@ -213,7 +206,7 @@ const Crud = () => {
         return (
             <>
                 <Button icon="pi pi-pencil" severity="success" rounded className="mr-2" onClick={() => showEditModal(rowData)} />
-                <Button icon="pi pi-trash" severity="warning" rounded onClick={() => confirmDeleteFournisseur(rowData)} />
+                <Button icon="pi pi-trash" severity="warning" rounded onClick={() => confirmDeleteItem(rowData)} />
             </>
         );
     };
@@ -231,12 +224,12 @@ const Crud = () => {
     const deleteItemDialogFooter = (
         <>
             <Button label="No" icon="pi pi-times" text onClick={hideDeleteItemDialog} />
-            <Button label="Yes" icon="pi pi-check" text onClick={deleteFournisseur} />
+            <Button label="Yes" icon="pi pi-check" text onClick={deleteItem} />
         </>
     );
-    const deleteFournisseursDialogFooter = (
+    const deleteItemsDialogFooter = (
         <>
-            <Button label="No" icon="pi pi-times" text onClick={hideDeleteFournisseursDialog} />
+            <Button label="No" icon="pi pi-times" text onClick={hideDeleteItemsDialog} />
             <Button label="Yes" icon="pi pi-check" text onClick={deleteSelectedItems} />
         </>
     );
@@ -288,7 +281,7 @@ const Crud = () => {
                         </div>
                     </Dialog>
 
-                    <Dialog visible={deleteFournisseursDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteFournisseursDialogFooter} onHide={hideDeleteFournisseursDialog}>
+                    <Dialog visible={deleteItemsDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteItemsDialogFooter} onHide={hideDeleteItemsDialog}>
                         <div className="flex align-items-center justify-content-center">
                             <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
                             {fournisseur && <span>Are you sure you want to delete the selected fournisseurs?</span>}
